@@ -7,3 +7,6 @@
 [submodule "sc_sncn_motorcontrol"]
 	path = sc_sncn_motorcontrol
 	url = https://github.com/synapticon/sc_sncn_motorcontrol.git
+[submodule "sc_pwm"]
+	path = sc_pwm
+	url = https://github.com/synapticon/sc_pwm.git
