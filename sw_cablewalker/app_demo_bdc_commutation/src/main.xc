@@ -42,7 +42,7 @@ int main(void) {
         on tile[APP_TILE_1]:
         {
               while (1) {
-                  set_BDC_motor_voltage(c_commutation, 500);
+                  set_BDC_motor_voltage(c_commutation, 500);//maximum 13589
               }
         }
 
