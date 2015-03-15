@@ -24,3 +24,8 @@ Icon
 Network Trash Folder
 Temporary Items
 .apdisk
+
+# xTIMEcomposer stuff
+.metadata
+bin
+.settings

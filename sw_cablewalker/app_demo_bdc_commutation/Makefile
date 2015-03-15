@@ -1,7 +1,7 @@
 # The TARGET variable determines what target system the application is
 # compiled for. It either refers to an XN file in the source directories
 # or a valid argument for the --target option when compiling
-#TARGET = SOMANET-C22_Motor-Control_xSCOPE
+TARGET = SOMANET-C22_Motor-Control_xSCOPE
 #TARGET = SOMANET-C21-DX_Motor-Control_xSCOPE
 
 # The APP_NAME variable determines the name of the final .xe file. It should
@@ -10,7 +10,7 @@
 APP_NAME = app_demo_bdc_commutation
 
 # The USED_MODULES variable lists other module used by the application.
-USED_MODULES = motor_config module_adc module_blocks module_board-support module_commutation module_hall module_motor module_motorcontrol_common module_pwm_symmetrical module_qei module_statemachine module_xscope-wrapper
+USED_MODULES = module_adc module_blocks module_board-support module_brushed_dc module_commutation module_hall module_motor module_motorcontrol_common module_pwm_symmetrical module_qei module_xscope-wrapper
 
 
 # The flags passed to xcc when building the application
