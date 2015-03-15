@@ -1,3 +1,6 @@
 [submodule "sw_sncn_motorcontrol"]
 	path = sw_sncn_motorcontrol
 	url = https://github.com/synapticon/sw_sncn_motorcontrol.git
+[submodule "sc_somanet-base"]
+	path = sc_somanet-base
+	url = https://github.com/synapticon/sc_somanet-base.git
