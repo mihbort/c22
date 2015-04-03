@@ -26,6 +26,45 @@ void set_BDC_motor_voltage(chanend c_commutation, int input_voltage){
     return;
 }
 
+void handle_digital_io(chanend c_commutation, port p_ifm_ext_d[]){
+    int cmd_forward, cmd_backward;
+    int sp_voltage = 5000;//maximum 13589
+    int voltage = 0;
+    p_ifm_ext_d[0] :> cmd_forward;
+    p_ifm_ext_d[1] :> cmd_backward;
+
+    while(1){
+        select{
+            //wait for state change on port D0
+            case p_ifm_ext_d[0] when pinsneq(cmd_forward) :> cmd_forward:
+                if(cmd_forward && !cmd_backward){//D0 logical one
+                    for (; voltage < sp_voltage; voltage ++){
+                        set_BDC_motor_voltage(c_commutation, voltage);
+                    }
+                }
+                else if(!cmd_forward && !cmd_backward){//logical zero
+                    for (; voltage > 0; voltage --){
+                        set_BDC_motor_voltage(c_commutation, voltage);
+                    }
+                }
+                break;
+            //wait for state change on port D1
+            case p_ifm_ext_d[1] when pinsneq(cmd_backward) :> cmd_backward:
+                if(cmd_backward && !cmd_forward){//D1 logical one
+                    for (; voltage > -sp_voltage; voltage --){
+                        set_BDC_motor_voltage(c_commutation, voltage);
+                    }
+                }
+                else if(!cmd_backward && !cmd_forward){//logical zero
+                    for (; voltage < 0; voltage ++){
+                        set_BDC_motor_voltage(c_commutation, voltage);
+                    }
+                }
+                break;
+        }
+    }
+}
+
 int main(void) {
 
     // Motor control channels
@@ -39,12 +78,6 @@ int main(void) {
          * USER_TILE
          ************************************************************/
 
-        on tile[APP_TILE_1]:
-        {
-              while (1) {
-                  set_BDC_motor_voltage(c_commutation, 500);//maximum 13589
-              }
-        }
 
         /************************************************************
          * IFM_TILE
@@ -65,6 +98,8 @@ int main(void) {
 
                 /* Watchdog Server */
                 run_watchdog(c_watchdog, p_ifm_wd_tick, p_ifm_shared_leds_wden);
+
+                handle_digital_io(c_commutation, p_ifm_ext_d);
 
             }
         }
