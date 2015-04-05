@@ -30,34 +30,46 @@ void handle_digital_io(chanend c_commutation, port p_ifm_ext_d[]){
     int cmd_forward, cmd_backward;
     int sp_voltage = 5000;//maximum 13589
     int voltage = 0;
+    timer t;
+    unsigned int time;
+
     p_ifm_ext_d[0] :> cmd_forward;
     p_ifm_ext_d[1] :> cmd_backward;
+
 
     while(1){
         select{
             //wait for state change on port D0
             case p_ifm_ext_d[0] when pinsneq(cmd_forward) :> cmd_forward:
                 if(cmd_forward && !cmd_backward){//D0 logical one
+                    t :> time;
                     for (; voltage < sp_voltage; voltage ++){
                         set_BDC_motor_voltage(c_commutation, voltage);
+                        t when timerafter(time + MSEC_FAST/3) :> time;
                     }
                 }
                 else if(!cmd_forward && !cmd_backward){//logical zero
+                    t :> time;
                     for (; voltage > 0; voltage --){
                         set_BDC_motor_voltage(c_commutation, voltage);
+                        t when timerafter(time + MSEC_FAST/3) :> time;
                     }
                 }
                 break;
             //wait for state change on port D1
             case p_ifm_ext_d[1] when pinsneq(cmd_backward) :> cmd_backward:
                 if(cmd_backward && !cmd_forward){//D1 logical one
+                    t :> time;
                     for (; voltage > -sp_voltage; voltage --){
                         set_BDC_motor_voltage(c_commutation, voltage);
+                        t when timerafter(time + MSEC_FAST/3) :> time;
                     }
                 }
                 else if(!cmd_backward && !cmd_forward){//logical zero
+                    t :> time;
                     for (; voltage < 0; voltage ++){
                         set_BDC_motor_voltage(c_commutation, voltage);
+                        t when timerafter(time + MSEC_FAST/3) :> time;
                     }
                 }
                 break;
